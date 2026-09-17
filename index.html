@@ -1,36 +1,770 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ROYAL PLAY — Casino & Luxury Market</title><link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ROYAL PLAY — Casino & Luxury Market</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* additional fixes for tabs & settings */
+        .settings-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-left: 20px;
+        }
+        .settings-bar select, .settings-bar button {
+            background: #1b1d26;
+            border: 1px solid #2e313c;
+            color: #f0ede5;
+            padding: 8px 12px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .settings-bar select:hover, .settings-bar button:hover {
+            border-color: #d8aa55;
+            background: #22242e;
+        }
+        .settings-bar button {
+            background: #d8aa55;
+            color: #0b0c11;
+            border: none;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active-tab {
+            display: block;
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 24px;
+            color: #a9abb4;
+            font-size: 14px;
+        }
+        .nav-tabs a {
+            cursor: pointer;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+            transition: 0.2s;
+            text-decoration: none;
+            color: #a9abb4;
+        }
+        .nav-tabs a.active-tab-link {
+            color: #fff;
+            border-bottom-color: #d8aa55;
+        }
+        .nav-tabs a:hover {
+            color: #fff;
+        }
+        .balance-display {
+            margin-left: auto;
+            background: #15171e;
+            border: 1px solid #292c36;
+            border-radius: 30px;
+            padding: 10px 16px;
+            color: #aeb0b8;
+            white-space: nowrap;
+        }
+        .balance-display b {
+            color: #e3b65e;
+        }
+        .topbar {
+            flex-wrap: wrap;
+            height: auto;
+            min-height: 76px;
+            padding: 12px 6%;
+            gap: 18px;
+        }
+        .settings-bar .currency-label {
+            font-size: 12px;
+            color: #aaa;
+        }
+        .game-ui .betrow input {
+            width: 120px;
+        }
+        .product-price {
+            display: block;
+            font-size: 18px;
+            margin: 18px 0;
+            color: #e3b65e;
+        }
+        .modal .game-ui button {
+            margin: 5px;
+        }
+        .result.win {
+            color: #d8aa55;
+        }
+        .result.lose {
+            color: #f17c7c;
+        }
+        .vip-level b {
+            display: block;
+            font-size: 30px;
+            margin: 5px;
+        }
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
-<header class="topbar"><div class="logo">ROYAL<span>PLAY</span></div>
-<nav><a href="#games">Игры</a><a href="#shop">Магазин</a><a href="#vip">VIP</a></nav>
-<div class="balance">Баланс: <b id="balance">10 000</b> RP</div><button class="profile">👤 Профиль</button></header>
+<header class="topbar">
+    <div class="logo">ROYAL<span>PLAY</span></div>
+    <nav class="nav-tabs" id="mainNav">
+        <a data-tab="games" class="active-tab-link">Игры</a>
+        <a data-tab="shop">Магазин</a>
+        <a data-tab="vip">VIP</a>
+    </nav>
+    <div class="settings-bar">
+        <select id="langSelect" aria-label="Язык">
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="en">🇬🇧 English</option>
+        </select>
+        <select id="currencySelect" aria-label="Валюта">
+            <option value="EUR">€ EUR</option>
+            <option value="USD">$ USD</option>
+            <option value="RUB">₽ RUB</option>
+        </select>
+        <div class="balance-display">Баланс: <b id="balance">10 000</b> <span id="currencySymbol">RP</span></div>
+    </div>
+    <button class="profile" id="profileBtn">👤 Профиль</button>
+</header>
 
 <main>
-<section class="hero"><div><div class="eyebrow">ROYAL PLAY • PREMIUM DEMO</div>
-<h1>Казино.<br><span>Маркетплейс.</span><br>Один мир.</h1>
-<p>Полноценные мини-игры с правилами и интерактивным процессом плюс витрина премиальных товаров. Всё работает в браузере на виртуальных RP.</p>
-<div class="hero-actions"><a class="btn primary" href="#games">Начать игру</a><a class="btn ghost" href="#shop">Смотреть товары</a></div></div>
-<div class="hero-card"><div class="chip">♛</div><div class="hero-number" id="heroBalance">10 000</div><div class="muted">виртуальных RP</div><div class="stats"><span>🔥 Серия <b>7</b></span><span>💎 VIP <b>Gold</b></span></div></div></section>
+    <!-- ИГРЫ (главная вкладка) -->
+    <div id="tab-games" class="tab-content active-tab">
+        <section class="hero">
+            <div>
+                <div class="eyebrow" data-i18n="hero_eyebrow">ROYAL PLAY • PREMIUM DEMO</div>
+                <h1 data-i18n="hero_title">Казино.<br><span>Маркетплейс.</span><br>Один мир.</h1>
+                <p data-i18n="hero_desc">Полноценные мини-игры с правилами и интерактивным процессом плюс витрина премиальных товаров. Всё работает в браузере на виртуальных RP.</p>
+                <div class="hero-actions">
+                    <a class="btn primary" href="#games" data-i18n="hero_play">Начать игру</a>
+                    <a class="btn ghost" href="#shop" data-i18n="hero_shop">Смотреть товары</a>
+                </div>
+            </div>
+            <div class="hero-card">
+                <div class="chip">♛</div>
+                <div class="hero-number" id="heroBalance">10 000</div>
+                <div class="muted" data-i18n="hero_balance_label">виртуальных RP</div>
+                <div class="stats"><span>🔥 <span data-i18n="hero_streak">Серия</span> <b>7</b></span><span>💎 VIP <b>Gold</b></span></div>
+            </div>
+        </section>
 
-<section id="games" class="section"><div class="section-head"><div><div class="eyebrow">LIVE ARCADE</div><h2>Настоящий игровой процесс</h2></div><span class="pill">18+ • DEMO • без реальных ставок</span></div>
-<div class="games-grid">
-<article class="game"><div class="game-art roulette-art">🎡</div><h3>Royal Roulette</h3><p>Выбирайте число, цвет или диапазон.</p><button class="play" onclick="openGame('roulette')">Открыть стол</button></article>
-<article class="game"><div class="game-art cards-art">🂡</div><h3>Blackjack</h3><p>Раздача карт, Hit, Stand и подсчёт 21.</p><button class="play" onclick="openGame('blackjack')">Открыть стол</button></article>
-<article class="game"><div class="game-art slots-art">🎰</div><h3>Neon Slots</h3><p>3 барабана, линии и реальные комбинации.</p><button class="play" onclick="openGame('slots')">Крутить</button></article>
-<article class="game"><div class="game-art dice-art">🎲</div><h3>High Dice</h3><p>Бросок кубика и выбор ставки на результат.</p><button class="play" onclick="openGame('dice')">Открыть игру</button></article>
-</div></section>
+        <section id="games" class="section">
+            <div class="section-head">
+                <div>
+                    <div class="eyebrow" data-i18n="games_eyebrow">LIVE ARCADE</div>
+                    <h2 data-i18n="games_title">Настоящий игровой процесс</h2>
+                </div>
+                <span class="pill" data-i18n="games_pill">18+ • DEMO • без реальных ставок</span>
+            </div>
+            <div class="games-grid">
+                <article class="game">
+                    <div class="game-art roulette-art">🎡</div>
+                    <h3>Royal Roulette</h3>
+                    <p data-i18n="game_roulette_desc">Выбирайте число, цвет или диапазон.</p>
+                    <button class="play" onclick="openGame('roulette')" data-i18n="game_open_table">Открыть стол</button>
+                </article>
+                <article class="game">
+                    <div class="game-art cards-art">🂡</div>
+                    <h3>Blackjack</h3>
+                    <p data-i18n="game_blackjack_desc">Раздача карт, Hit, Stand и подсчёт 21.</p>
+                    <button class="play" onclick="openGame('blackjack')" data-i18n="game_open_table">Открыть стол</button>
+                </article>
+                <article class="game">
+                    <div class="game-art slots-art">🎰</div>
+                    <h3>Neon Slots</h3>
+                    <p data-i18n="game_slots_desc">3 барабана, линии и реальные комбинации.</p>
+                    <button class="play" onclick="openGame('slots')" data-i18n="game_spin">Крутить</button>
+                </article>
+                <article class="game">
+                    <div class="game-art dice-art">🎲</div>
+                    <h3>High Dice</h3>
+                    <p data-i18n="game_dice_desc">Бросок кубика и выбор ставки на результат.</p>
+                    <button class="play" onclick="openGame('dice')" data-i18n="game_open_dice">Открыть игру</button>
+                </article>
+            </div>
+        </section>
+    </div>
 
-<section id="shop" class="section shop"><div class="section-head"><div><div class="eyebrow">ROYAL MARKET</div><h2>Премиальный магазин</h2></div>
-<div class="filters"><button class="filter active" data-filter="all">Все</button><button class="filter" data-filter="home">Недвижимость</button><button class="filter" data-filter="yacht">Яхты</button><button class="filter" data-filter="car">Авто</button><button class="filter" data-filter="watch">Часы</button></div></div>
-<div class="products">
-<article class="product" data-cat="home"><div class="product-img house">🏝️</div><div class="product-body"><small>НЕДВИЖИМОСТЬ</small><h3>Villa Azure</h3><p>Средиземноморская вилла · 6 спален</p><strong>€ 4 850 000</strong><button onclick="openProduct('Villa Azure','€ 4 850 000')">Купить</button></div></article><article class="product" data-cat="yacht"><div class="product-img yacht">🛥️</div><div class="product-body"><small>ЯХТЫ</small><h3>Ocean Crown 72</h3><p>22 м · 4 каюты · 12 гостей</p><strong>€ 7 200 000</strong><button onclick="openProduct('Ocean Crown 72','€ 7 200 000')">Купить</button></div></article><article class="product" data-cat="car"><div class="product-img car">🏎️</div><div class="product-body"><small>АВТО</small><h3>V12 Grand Tourer</h3><p>Спортивное купе · 799 л.с.</p><strong>€ 385 000</strong><button onclick="openProduct('V12 Grand Tourer','€ 385 000')">Купить</button></div></article><article class="product" data-cat="home"><div class="product-img pent">🏙️</div><div class="product-body"><small>НЕДВИЖИМОСТЬ</small><h3>Skyline Penthouse</h3><p>310 м² · панорама города</p><strong>€ 2 950 000</strong><button onclick="openProduct('Skyline Penthouse','€ 2 950 000')">Купить</button></div></article><article class="product" data-cat="yacht"><div class="product-img yacht2">⛵</div><div class="product-body"><small>ЯХТЫ</small><h3>Monaco 58</h3><p>17,7 м · flybridge · 10 гостей</p><strong>€ 3 980 000</strong><button onclick="openProduct('Monaco 58','€ 3 980 000')">Купить</button></div></article><article class="product" data-cat="car"><div class="product-img supercar">🚘</div><div class="product-body"><small>АВТО</small><h3>Grand GT Black</h3><p>V8 · 612 л.с. · AWD</p><strong>€ 245 000</strong><button onclick="openProduct('Grand GT Black','€ 245 000')">Купить</button></div></article><article class="product" data-cat="watch"><div class="product-img watch">⌚</div><div class="product-body"><small>ЧАСЫ</small><h3>Royal Chronograph</h3><p>Механика · золото 18K · лимит 100 шт.</p><strong>€ 68 000</strong><button onclick="openProduct('Royal Chronograph','€ 68 000')">Купить</button></div></article><article class="product" data-cat="watch"><div class="product-img watch2">💎</div><div class="product-body"><small>ЧАСЫ</small><h3>Imperial Tourbillon</h3><p>Турбийон · платина · ручная сборка</p><strong>€ 185 000</strong><button onclick="openProduct('Imperial Tourbillon','€ 185 000')">Купить</button></div></article><article class="product" data-cat="home"><div class="product-img villa2">🏡</div><div class="product-body"><small>НЕДВИЖИМОСТЬ</small><h3>Lake House</h3><p>Дом у озера · 420 м² · собственный причал</p><strong>€ 1 870 000</strong><button onclick="openProduct('Lake House','€ 1 870 000')">Купить</button></div></article><article class="product" data-cat="car"><div class="product-img roadster">🏁</div><div class="product-body"><small>АВТО</small><h3>Italian Roadster</h3><p>V10 · 640 л.с. · 0–100 за 3,2 с</p><strong>€ 420 000</strong><button onclick="openProduct('Italian Roadster','€ 420 000')">Купить</button></div></article><article class="product" data-cat="yacht"><div class="product-img megayacht">🚢</div><div class="product-body"><small>ЯХТЫ</small><h3>Crown 110</h3><p>33 м · 5 кают · экипаж 6 человек</p><strong>€ 12 500 000</strong><button onclick="openProduct('Crown 110','€ 12 500 000')">Купить</button></div></article><article class="product" data-cat="home"><div class="product-img mansion">🏰</div><div class="product-body"><small>НЕДВИЖИМОСТЬ</small><h3>Royal Estate</h3><p>Усадьба · 1 200 м² · парк 3 га</p><strong>€ 8 900 000</strong><button onclick="openProduct('Royal Estate','€ 8 900 000')">Купить</button></div></article>
-</div></section>
-<section id="vip" class="vip"><div><div class="eyebrow">ROYAL CLUB</div><h2>VIP-программа</h2><p>Эксклюзивные витрины, бонусные RP и персональные предложения в демо-режиме.</p></div><div class="vip-level"><span>GOLD</span><b>7 500</b><small>RP до Platinum</small></div></section>
-</main><footer><span>ROYALPLAY © 2026</span><span>18+ • Демо • реальные платежи отключены</span></footer>
+    <!-- МАГАЗИН (отдельная вкладка) -->
+    <div id="tab-shop" class="tab-content">
+        <section id="shop" class="section shop" style="padding-top: 50px;">
+            <div class="section-head">
+                <div>
+                    <div class="eyebrow" data-i18n="shop_eyebrow">ROYAL MARKET</div>
+                    <h2 data-i18n="shop_title">Премиальный магазин</h2>
+                </div>
+                <div class="filters">
+                    <button class="filter active" data-filter="all" data-i18n="filter_all">Все</button>
+                    <button class="filter" data-filter="home" data-i18n="filter_home">Недвижимость</button>
+                    <button class="filter" data-filter="yacht" data-i18n="filter_yacht">Яхты</button>
+                    <button class="filter" data-filter="car" data-i18n="filter_car">Авто</button>
+                    <button class="filter" data-filter="watch" data-i18n="filter_watch">Часы</button>
+                </div>
+            </div>
+            <div class="products" id="productsContainer">
+                <!-- товары будут отрендерены через JS -->
+            </div>
+        </section>
+    </div>
 
-<div class="modal" id="modal"><div class="modal-box"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
-<script src="script.js"></script></body></html>
+    <!-- VIP (отдельная вкладка) -->
+    <div id="tab-vip" class="tab-content">
+        <section id="vip" class="vip" style="margin-top: 50px;">
+            <div>
+                <div class="eyebrow" data-i18n="vip_eyebrow">ROYAL CLUB</div>
+                <h2 data-i18n="vip_title">VIP-программа</h2>
+                <p data-i18n="vip_desc">Эксклюзивные витрины, бонусные RP и персональные предложения в демо-режиме.</p>
+            </div>
+            <div class="vip-level">
+                <span>GOLD</span>
+                <b>7 500</b>
+                <small data-i18n="vip_until_platinum">RP до Platinum</small>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer>
+    <span>ROYALPLAY © 2026</span>
+    <span data-i18n="footer_demo">18+ • Демо • реальные платежи отключены</span>
+</footer>
+
+<div class="modal" id="modal">
+    <div class="modal-box">
+        <button class="close" onclick="closeModal()">×</button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<script>
+    // ---------- ПЕРЕВОДЫ ----------
+    const i18n = {
+        ru: {
+            hero_eyebrow: "ROYAL PLAY • PREMIUM DEMO",
+            hero_title: "Казино.<br><span>Маркетплейс.</span><br>Один мир.",
+            hero_desc: "Полноценные мини-игры с правилами и интерактивным процессом плюс витрина премиальных товаров. Всё работает в браузере на виртуальных RP.",
+            hero_play: "Начать игру",
+            hero_shop: "Смотреть товары",
+            hero_balance_label: "виртуальных RP",
+            hero_streak: "Серия",
+            games_eyebrow: "LIVE ARCADE",
+            games_title: "Настоящий игровой процесс",
+            games_pill: "18+ • DEMO • без реальных ставок",
+            game_roulette_desc: "Выбирайте число, цвет или диапазон.",
+            game_blackjack_desc: "Раздача карт, Hit, Stand и подсчёт 21.",
+            game_slots_desc: "3 барабана, линии и реальные комбинации.",
+            game_dice_desc: "Бросок кубика и выбор ставки на результат.",
+            game_open_table: "Открыть стол",
+            game_spin: "Крутить",
+            game_open_dice: "Открыть игру",
+            shop_eyebrow: "ROYAL MARKET",
+            shop_title: "Премиальный магазин",
+            filter_all: "Все",
+            filter_home: "Недвижимость",
+            filter_yacht: "Яхты",
+            filter_car: "Авто",
+            filter_watch: "Часы",
+            vip_eyebrow: "ROYAL CLUB",
+            vip_title: "VIP-программа",
+            vip_desc: "Эксклюзивные витрины, бонусные RP и персональные предложения в демо-режиме.",
+            vip_until_platinum: "RP до Platinum",
+            footer_demo: "18+ • Демо • реальные платежи отключены",
+            buy: "Купить",
+            currency_label: "Валюта",
+            language_label: "Язык",
+            balance_label: "Баланс",
+            bet: "Ставка",
+            hit: "Hit",
+            stand: "Stand",
+            new_deal: "Новая раздача",
+            spin: "Крутить барабаны",
+            dealer: "Дилер",
+            you: "Вы",
+            win: "Победа!",
+            lose: "Проигрыш",
+            draw: "Ничья",
+            invalid_bet: "Введите корректную ставку в пределах баланса.",
+            choose_number: "Выберите число или цвет",
+            result_prefix: "Выпало",
+            red: "Красное",
+            black: "Чёрное",
+            exact_hit: "🎉 Точное попадание!",
+            no_combo: "Нет комбинации",
+            win_mult: "Выигрыш ×{mult}",
+            demo_pay: "🔒 ДЕМО-ОПЛАТА • данные не отправляются",
+            order_placed: "Заказ оформлен",
+            demo_order: "Демонстрационная заявка на {name} создана.",
+            payment_animated: "Платёжная анимация завершена",
+            back_to_shop: "Вернуться в магазин",
+            card_holder: "Имя держателя карты",
+            card_number: "Номер карты •••• •••• •••• ••••",
+            expiry: "MM / YY",
+            cvc: "CVC",
+            address: "Адрес доставки",
+            pay: "Оплатить",
+            royal_checkout: "ROYAL CHECKOUT",
+            low: "1–3",
+            high: "4–6",
+            select_bet: "Выберите: низ (1–3), высокий (4–6) или конкретное число.",
+            dice_result: "Выпало {n}.",
+            dice_win: "Победа! +{amount} RP",
+            dice_lose: "Проигрыш: -{amount} RP",
+            roulette_title: "🎡 Roulette",
+            blackjack_title: "🂡 Blackjack",
+            slots_title: "🎰 Neon Slots",
+            dice_title: "🎲 High Dice",
+            new_round: "Новая раздача",
+            choose: "Выберите",
+            game_over: "Игра окончена",
+            over_21: "Перебор: {score}",
+            dealer_won: "😕 Дилер выиграл.",
+            push: "🤝 Ничья. Ставка возвращена",
+            win_amount: "🎉 Победа! +{amount} RP",
+            lost_amount: "Проигрыш: -{amount} RP",
+            player: "Вы",
+            place_bet: "Ставка",
+            empty_products: "Товары не найдены"
+        },
+        en: {
+            hero_eyebrow: "ROYAL PLAY • PREMIUM DEMO",
+            hero_title: "Casino.<br><span>Marketplace.</span><br>One world.",
+            hero_desc: "Full-featured mini-games with rules and interactive play, plus a premium goods showcase. Everything runs in your browser with virtual RP.",
+            hero_play: "Start Game",
+            hero_shop: "Browse Goods",
+            hero_balance_label: "virtual RP",
+            hero_streak: "Streak",
+            games_eyebrow: "LIVE ARCADE",
+            games_title: "Real Gameplay",
+            games_pill: "18+ • DEMO • no real bets",
+            game_roulette_desc: "Pick a number, color or range.",
+            game_blackjack_desc: "Deal cards, Hit, Stand and count to 21.",
+            game_slots_desc: "3 reels, lines and real combinations.",
+            game_dice_desc: "Roll the dice and bet on the outcome.",
+            game_open_table: "Open Table",
+            game_spin: "Spin",
+            game_open_dice: "Open Game",
+            shop_eyebrow: "ROYAL MARKET",
+            shop_title: "Premium Shop",
+            filter_all: "All",
+            filter_home: "Real Estate",
+            filter_yacht: "Yachts",
+            filter_car: "Cars",
+            filter_watch: "Watches",
+            vip_eyebrow: "ROYAL CLUB",
+            vip_title: "VIP Program",
+            vip_desc: "Exclusive showcases, bonus RP and personal offers in demo mode.",
+            vip_until_platinum: "RP to Platinum",
+            footer_demo: "18+ • Demo • real payments disabled",
+            buy: "Buy",
+            currency_label: "Currency",
+            language_label: "Language",
+            balance_label: "Balance",
+            bet: "Bet",
+            hit: "Hit",
+            stand: "Stand",
+            new_deal: "New Deal",
+            spin: "Spin Reels",
+            dealer: "Dealer",
+            you: "You",
+            win: "Win!",
+            lose: "Loss",
+            draw: "Push",
+            invalid_bet: "Enter a valid bet within your balance.",
+            choose_number: "Choose a number or color",
+            result_prefix: "Rolled",
+            red: "Red",
+            black: "Black",
+            exact_hit: "🎉 Exact hit!",
+            no_combo: "No combination",
+            win_mult: "Win ×{mult}",
+            demo_pay: "🔒 DEMO PAYMENT • data not sent",
+            order_placed: "Order Placed",
+            demo_order: "Demo order for {name} created.",
+            payment_animated: "Payment animation complete",
+            back_to_shop: "Back to Shop",
+            card_holder: "Cardholder Name",
+            card_number: "Card Number •••• •••• •••• ••••",
+            expiry: "MM / YY",
+            cvc: "CVC",
+            address: "Shipping Address",
+            pay: "Pay",
+            royal_checkout: "ROYAL CHECKOUT",
+            low: "1–3",
+            high: "4–6",
+            select_bet: "Choose: low (1–3), high (4–6) or a specific number.",
+            dice_result: "Rolled {n}.",
+            dice_win: "Win! +{amount} RP",
+            dice_lose: "Loss: -{amount} RP",
+            roulette_title: "🎡 Roulette",
+            blackjack_title: "🂡 Blackjack",
+            slots_title: "🎰 Neon Slots",
+            dice_title: "🎲 High Dice",
+            new_round: "New Deal",
+            choose: "Choose",
+            game_over: "Game Over",
+            over_21: "Bust: {score}",
+            dealer_won: "😕 Dealer wins.",
+            push: "🤝 Push. Bet returned",
+            win_amount: "🎉 Win! +{amount} RP",
+            lost_amount: "Loss: -{amount} RP",
+            player: "You",
+            place_bet: "Bet",
+            empty_products: "No products found"
+        }
+    };
+
+    // ---------- СОСТОЯНИЕ ----------
+    let currentLang = 'ru';
+    let currentCurrency = 'EUR'; // EUR, USD, RUB
+    let balance = 10000;
+    let dealer = [], player = [], activeGame = '';
+    let products = [
+        { id: 1, cat: 'home', name: 'Villa Azure', desc: 'Средиземноморская вилла · 6 спален', descEn: 'Mediterranean villa · 6 bedrooms', priceEUR: 4850000, icon: '🏝️', class: 'house' },
+        { id: 2, cat: 'yacht', name: 'Ocean Crown 72', desc: '22 м · 4 каюты · 12 гостей', descEn: '22 m · 4 cabins · 12 guests', priceEUR: 7200000, icon: '🛥️', class: 'yacht' },
+        { id: 3, cat: 'car', name: 'V12 Grand Tourer', desc: 'Спортивное купе · 799 л.с.', descEn: 'Sports coupe · 799 hp', priceEUR: 385000, icon: '🏎️', class: 'car' },
+        { id: 4, cat: 'home', name: 'Skyline Penthouse', desc: '310 м² · панорама города', descEn: '310 m² · city panorama', priceEUR: 2950000, icon: '🏙️', class: 'pent' },
+        { id: 5, cat: 'yacht', name: 'Monaco 58', desc: '17,7 м · flybridge · 10 гостей', descEn: '17.7 m · flybridge · 10 guests', priceEUR: 3980000, icon: '⛵', class: 'yacht2' },
+        { id: 6, cat: 'car', name: 'Grand GT Black', desc: 'V8 · 612 л.с. · AWD', descEn: 'V8 · 612 hp · AWD', priceEUR: 245000, icon: '🚘', class: 'supercar' },
+        { id: 7, cat: 'watch', name: 'Royal Chronograph', desc: 'Механика · золото 18K · лимит 100 шт.', descEn: 'Mechanical · 18K gold · limited 100 pcs', priceEUR: 68000, icon: '⌚', class: 'watch' },
+        { id: 8, cat: 'watch', name: 'Imperial Tourbillon', desc: 'Турбийон · платина · ручная сборка', descEn: 'Tourbillon · platinum · hand-assembled', priceEUR: 185000, icon: '💎', class: 'watch2' },
+        { id: 9, cat: 'home', name: 'Lake House', desc: 'Дом у озера · 420 м² · собственный причал', descEn: 'Lake house · 420 m² · private dock', priceEUR: 1870000, icon: '🏡', class: 'villa2' },
+        { id: 10, cat: 'car', name: 'Italian Roadster', desc: 'V10 · 640 л.с. · 0–100 за 3,2 с', descEn: 'V10 · 640 hp · 0–100 in 3.2s', priceEUR: 420000, icon: '🏁', class: 'roadster' },
+        { id: 11, cat: 'yacht', name: 'Crown 110', desc: '33 м · 5 кают · экипаж 6 человек', descEn: '33 m · 5 cabins · crew of 6', priceEUR: 12500000, icon: '🚢', class: 'megayacht' },
+        { id: 12, cat: 'home', name: 'Royal Estate', desc: 'Усадьба · 1 200 м² · парк 3 га', descEn: 'Estate · 1,200 m² · 3 ha park', priceEUR: 8900000, icon: '🏰', class: 'mansion' }
+    ];
+
+    const $ = s => document.querySelector(s);
+    const modal = $("#modal"), content = $("#modalContent");
+
+    // ---------- ФОРМАТИРОВАНИЕ ----------
+    function fmt(n) {
+        if (currentCurrency === 'RUB') {
+            return Math.floor(n).toLocaleString('ru-RU');
+        } else {
+            return Math.floor(n).toLocaleString('en-US');
+        }
+    }
+
+    function convertPrice(eurAmount) {
+        const rates = { EUR: 1, USD: 1.08, RUB: 95.0 };
+        return eurAmount * rates[currentCurrency];
+    }
+
+    function formatCurrency(amountInEUR) {
+        const converted = convertPrice(amountInEUR);
+        const symbol = currentCurrency === 'EUR' ? '€' : currentCurrency === 'USD' ? '$' : '₽';
+        return symbol + ' ' + fmt(converted);
+    }
+
+    function setBalance(n) {
+        balance = Math.max(0, n);
+        $("#balance").textContent = fmt(balance);
+        $("#heroBalance").textContent = fmt(balance);
+        // Обновить символ валюты в балансе (RP остаётся)
+    }
+
+    // ---------- ПЕРЕВОД ИНТЕРФЕЙСА ----------
+    function applyLanguage(lang) {
+        currentLang = lang;
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (i18n[lang] && i18n[lang][key]) {
+                if (key === 'hero_title') {
+                    el.innerHTML = i18n[lang][key];
+                } else {
+                    el.textContent = i18n[lang][key];
+                }
+            }
+        });
+        // Обновляем плейсхолдеры в модальных окнах? Они генерируются заново.
+        // Обновляем магазин
+        renderProducts();
+        // Обновляем баланс
+        setBalance(balance);
+    }
+
+    // ---------- ВАЛЮТА ----------
+    function updateCurrencyDisplay() {
+        document.getElementById('currencySymbol').textContent = 'RP';
+        setBalance(balance);
+        renderProducts();
+    }
+
+    // ---------- МАГАЗИН ----------
+    function renderProducts() {
+        const container = document.getElementById('productsContainer');
+        if (!container) return;
+        const activeFilter = document.querySelector('.filter.active')?.dataset.filter || 'all';
+        const filtered = products.filter(p => activeFilter === 'all' || p.cat === activeFilter);
+        const lang = currentLang;
+        if (filtered.length === 0) {
+            container.innerHTML = `<p style="color:#aaa;grid-column:1/-1;text-align:center;">${i18n[lang].empty_products}</p>`;
+            return;
+        }
+        container.innerHTML = filtered.map(p => {
+            const desc = lang === 'ru' ? p.desc : p.descEn;
+            const priceStr = formatCurrency(p.priceEUR);
+            const buyLabel = i18n[lang].buy || 'Купить';
+            return `
+            <article class="product" data-cat="${p.cat}">
+                <div class="product-img ${p.class}">${p.icon}</div>
+                <div class="product-body">
+                    <small>${p.cat.toUpperCase()}</small>
+                    <h3>${p.name}</h3>
+                    <p>${desc}</p>
+                    <strong class="product-price">${priceStr}</strong>
+                    <button onclick="openProduct('${p.name.replace(/'/g, "\\'")}', '${priceStr}')">${buyLabel}</button>
+                </div>
+            </article>`;
+        }).join('');
+        // Перепривязываем фильтры
+        document.querySelectorAll('.filter').forEach(f => {
+            f.onclick = () => {
+                document.querySelectorAll('.filter').forEach(x => x.classList.remove('active'));
+                f.classList.add('active');
+                renderProducts();
+            };
+        });
+    }
+
+    // ---------- МОДАЛЬНЫЕ ОКНА ----------
+    function closeModal() { modal.classList.remove("show"); }
+    function show(html) { content.innerHTML = html; modal.classList.add("show"); }
+
+    // ---------- КАРТЫ ----------
+    const suits = ["♠", "♥", "♦", "♣"], ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+    function deck() { let d = []; for (const s of suits) for (const r of ranks) d.push({ r, s }); return d.sort(() => Math.random() - .5); }
+    function val(c) { return c.r === "A" ? 11 : ["K", "Q", "J"].includes(c.r) ? 10 : +c.r; }
+    function score(hand) { let x = hand.reduce((a, c) => a + val(c), 0), ac = hand.filter(c => c.r === "A").length; while (x > 21 && ac--) x -= 10; return x; }
+    function cards(h) { return `<div class="cards">${h.map(c => `<span class="card">${c.r}${c.s}</span>`).join("")}</div>`; }
+
+    // ---------- ИГРЫ ----------
+    function openGame(type) {
+        activeGame = type;
+        if (type === "roulette") roulette();
+        if (type === "blackjack") blackjackStart();
+        if (type === "slots") slots();
+        if (type === "dice") dice();
+    }
+
+    function stakeBox(defaultBet = 100) {
+        const lang = currentLang;
+        return `<div class="betrow"><input id="bet" type="number" min="1" value="${defaultBet}" placeholder="${i18n[lang].bet}"><span>RP</span></div>`;
+    }
+
+    function validBet(b) {
+        const lang = currentLang;
+        if (!Number.isFinite(b) || b < 1 || b > balance) {
+            if ($("#gameResult")) $("#gameResult").innerHTML = `<div class="result lose">${i18n[lang].invalid_bet}</div>`;
+            return false;
+        }
+        return true;
+    }
+
+    // --- Рулетка (реальная) ---
+    function roulette() {
+        const lang = currentLang;
+        const nums = Array.from({ length: 12 }, (_, i) => i + 1);
+        show(`<div class="game-ui"><div class="eyebrow">ROYAL TABLE</div><h2>${i18n[lang].roulette_title}</h2>
+        <div class="table"><div class="wheel">🎡</div><p>${i18n[lang].choose_number}</p>
+        <div class="choices">${nums.map(n => `<button class="choice" onclick="spinRoulette(${n})">${n}</button>`).join("")}</div></div>
+        ${stakeBox(100)}<div id="gameResult"></div></div>`);
+    }
+
+    function spinRoulette(n) {
+        const lang = currentLang;
+        const bet = Math.floor(+$("input#bet").value);
+        if (!validBet(bet)) return;
+        balance -= bet;
+        const result = Math.floor(Math.random() * 12) + 1;
+        const color = result % 2 ? i18n[lang].red : i18n[lang].black;
+        const win = result === n;
+        if (win) balance += bet * 10;
+        setBalance(balance);
+        $("#gameResult").innerHTML = `<div class="result ${win ? "win" : "lose"}">${i18n[lang].result_prefix} <b>${result}</b> • ${color}<br>${win ? i18n[lang].exact_hit + " +" + fmt(bet * 10) + " RP" : i18n[lang].choose + " " + n}</div>`;
+    }
+
+    // --- Блэкджек (реальный) ---
+    function blackjackStart() {
+        const lang = currentLang;
+        dealer = []; player = [];
+        let d = deck();
+        player = [d.pop(), d.pop()];
+        dealer = [d.pop(), d.pop()];
+        show(`<div class="game-ui"><div class="eyebrow">ROYAL TABLE</div><h2>${i18n[lang].blackjack_title}</h2>${stakeBox(250)}
+        <div class="table"><p>${i18n[lang].dealer}</p>${cards([dealer[0], { r: "?", s: "" }])}<p>${i18n[lang].you} · ${score(player)}</p>${cards(player)}
+        <div class="choices"><button onclick="bjHit()">${i18n[lang].hit}</button><button onclick="bjStand()">${i18n[lang].stand}</button><button onclick="blackjackStart()">${i18n[lang].new_deal}</button></div></div>
+        <div id="gameResult">${i18n[lang].game_over}</div></div>`);
+    }
+
+    function bjHit() {
+        const lang = currentLang;
+        const bet = Math.floor(+$("input#bet").value);
+        if (!validBet(bet)) return;
+        const d = deck();
+        player.push(d[0]);
+        if (score(player) > 21) {
+            balance -= bet;
+            setBalance(balance);
+            $("#gameResult").innerHTML = `<div class="result lose">${i18n[lang].over_21.replace('{score}', score(player))}. -${fmt(bet)} RP</div>`;
+            // Обновить стол
+            $(".table").innerHTML = `<p>${i18n[lang].dealer}</p>${cards([dealer[0], { r: "?", s: "" }])}<p>${i18n[lang].you} · ${score(player)}</p>${cards(player)}<div class="choices"><button onclick="bjHit()">${i18n[lang].hit}</button><button onclick="bjStand()">${i18n[lang].stand}</button></div>`;
+        } else {
+            $(".table").innerHTML = `<p>${i18n[lang].dealer}</p>${cards([dealer[0], { r: "?", s: "" }])}<p>${i18n[lang].you} · ${score(player)}</p>${cards(player)}<div class="choices"><button onclick="bjHit()">${i18n[lang].hit}</button><button onclick="bjStand()">${i18n[lang].stand}</button></div>`;
+        }
+    }
+
+    function bjStand() {
+        const lang = currentLang;
+        const bet = Math.floor(+$("input#bet").value);
+        if (!validBet(bet)) return;
+        while (score(dealer) < 17) dealer.push(deck()[0]);
+        let ps = score(player), ds = score(dealer);
+        let win = ds > 21 || ps > ds, draw = ps === ds;
+        balance -= bet;
+        if (win) balance += bet * 2;
+        if (draw) balance += bet;
+        setBalance(balance);
+        $(".table").innerHTML = `<p>${i18n[lang].dealer} · ${ds}</p>${cards(dealer)}<p>${i18n[lang].you} · ${ps}</p>${cards(player)}`;
+        $("#gameResult").innerHTML = `<div class="result ${win ? "win" : draw ? "" : "lose"}">${win ? i18n[lang].win_amount.replace('{amount}', fmt(bet)) : draw ? i18n[lang].push : i18n[lang].dealer_won + " -" + fmt(bet) + " RP"}</div>`;
+    }
+
+    // --- Слоты (реальные) ---
+    function slots() {
+        const lang = currentLang;
+        show(`<div class="game-ui"><div class="eyebrow">NEON ARCADE</div><h2>${i18n[lang].slots_title}</h2>${stakeBox(100)}
+        <div class="slots"><span class="reel" id="r1">🍒</span><span class="reel" id="r2">7️⃣</span><span class="reel" id="r3">💎</span></div>
+        <button onclick="spinSlots()">${i18n[lang].spin}</button><div id="gameResult">3 одинаковых символа = крупный выигрыш.</div></div>`);
+    }
+
+    function spinSlots() {
+        const lang = currentLang;
+        const bet = Math.floor(+$("input#bet").value);
+        if (!validBet(bet)) return;
+        balance -= bet;
+        const sy = ["🍒", "🍋", "🔔", "⭐", "7️⃣", "💎"];
+        const a = [...Array(3)].map(() => sy[Math.floor(Math.random() * sy.length)]);
+        ["#r1", "#r2", "#r3"].forEach((x, i) => $(x).textContent = a[i]);
+        let mult = a[0] === a[1] && a[1] === a[2] ? (a[0] === "💎" ? 20 : a[0] === "7️⃣" ? 15 : 8) : a[0] === a[1] || a[1] === a[2] ? 2 : 0;
+        balance += bet * mult;
+        setBalance(balance);
+        $("#gameResult").innerHTML = `<div class="result ${mult > 0 ? "win" : "lose"}">${a.join(" ")}<br>${mult ? i18n[lang].win_mult.replace('{mult}', mult) + ": +" + fmt(bet * mult) + " RP" : i18n[lang].no_combo}</div>`;
+    }
+
+    // --- Кости (реальные) ---
+    function dice() {
+        const lang = currentLang;
+        show(`<div class="game-ui"><div class="eyebrow">HIGH DICE</div><h2>${i18n[lang].dice_title}</h2>${stakeBox(150)}
+        <div class="table"><div id="die" style="font-size:80px">🎲</div><p>${i18n[lang].select_bet}</p>
+        <div class="choices"><button onclick="rollDice('low')">${i18n[lang].low}</button><button onclick="rollDice('high')">${i18n[lang].high}</button>
+        ${[1, 2, 3, 4, 5, 6].map(n => `<button onclick="rollDice(${n})">${n}</button>`).join("")}</div></div>
+        <div id="gameResult"></div></div>`);
+    }
+
+    function rollDice(choice) {
+        const lang = currentLang;
+        const bet = Math.floor(+$("input#bet").value);
+        if (!validBet(bet)) return;
+        balance -= bet;
+        const n = Math.floor(Math.random() * 6) + 1;
+        let win = choice === "low" ? n <= 3 : choice === "high" ? n >= 4 : n === choice;
+        let mult = (choice === "low" || choice === "high") ? 2 : 6;
+        if (win) balance += bet * mult;
+        setBalance(balance);
+        $("#die").textContent = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"][n];
+        $("#gameResult").innerHTML = `<div class="result ${win ? "win" : "lose"}">${i18n[lang].dice_result.replace('{n}', n)} ${win ? i18n[lang].dice_win.replace('{amount}', fmt(bet * mult)) : i18n[lang].dice_lose.replace('{amount}', fmt(bet))}</div>`;
+    }
+
+    // ---------- МАГАЗИН: ОПЛАТА ----------
+    function openProduct(name, price) {
+        const lang = currentLang;
+        show(`<div class="pay"><div class="eyebrow">${i18n[lang].royal_checkout}</div><h2>${name}</h2><p style="color:#aaa">${price}</p>
+        <div class="pay-grid">
+            <input class="card-input full" placeholder="${i18n[lang].card_holder}" autocomplete="off">
+            <input class="card-input full" placeholder="${i18n[lang].card_number}" inputmode="numeric" autocomplete="off">
+            <input class="card-input" placeholder="${i18n[lang].expiry}" autocomplete="off">
+            <input class="card-input" placeholder="${i18n[lang].cvc}" type="password" autocomplete="off">
+            <input class="card-input full" placeholder="${i18n[lang].address}" autocomplete="off">
+        </div>
+        <button class="pay-btn" onclick="fakePay('${name.replace(/'/g, "\\'")}')">${i18n[lang].pay} ${price}</button>
+        <div class="secure">${i18n[lang].demo_pay}</div></div>`);
+    }
+
+    function fakePay(name) {
+        const lang = currentLang;
+        content.innerHTML = `<div class="game-ui"><div style="font-size:60px">✓</div><h2>${i18n[lang].order_placed}</h2><p>${i18n[lang].demo_order.replace('{name}', name)}</p><div class="result win">${i18n[lang].payment_animated}</div><button onclick="closeModal()">${i18n[lang].back_to_shop}</button></div>`;
+    }
+
+    // ---------- ВКЛАДКИ ----------
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
+        document.getElementById('tab-' + tabId).classList.add('active-tab');
+        document.querySelectorAll('.nav-tabs a').forEach(a => a.classList.remove('active-tab-link'));
+        document.querySelector(`.nav-tabs a[data-tab="${tabId}"]`).classList.add('active-tab-link');
+        if (tabId === 'shop') renderProducts();
+    }
+
+    // ---------- ИНИЦИАЛИЗАЦИЯ ----------
+    document.addEventListener('DOMContentLoaded', () => {
+        // Навигация
+        document.querySelectorAll('.nav-tabs a').forEach(a => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab(a.dataset.tab);
+            });
+        });
+
+        // Настройки
+        document.getElementById('langSelect').addEventListener('change', (e) => {
+            applyLanguage(e.target.value);
+        });
+        document.getElementById('currencySelect').addEventListener('change', (e) => {
+            currentCurrency = e.target.value;
+            updateCurrencyDisplay();
+            renderProducts();
+            // Обновить баланс (сумма не меняется, только формат)
+            setBalance(balance);
+            // Пересчитать цены в открытом модальном окне? Закроем для простоты
+            if (modal.classList.contains('show')) closeModal();
+        });
+
+        // Профиль
+        document.getElementById('profileBtn').addEventListener('click', () => {
+            const lang = currentLang;
+            show(`<div class="game-ui"><h2>👤 ${i18n[lang].balance_label}</h2><div class="hero-number">${fmt(balance)} RP</div><p>${i18n[lang].hero_streak}: 7</p><button onclick="closeModal()">OK</button></div>`);
+        });
+
+        // Рендер магазина
+        renderProducts();
+
+        // Баланс
+        setBalance(balance);
+
+        // Закрытие модалки по фону
+        modal.onclick = e => { if (e.target === modal) closeModal(); };
+
+        // Устанавливаем язык по умолчанию (русский)
+        applyLanguage('ru');
+    });
+
+    // Экспорт в глобальную область
+    window.openGame = openGame;
+    window.spinRoulette = spinRoulette;
+    window.bjHit = bjHit;
+    window.bjStand = bjStand;
+    window.blackjackStart = blackjackStart;
+    window.spinSlots = spinSlots;
+    window.rollDice = rollDice;
+    window.openProduct = openProduct;
+    window.fakePay = fakePay;
+    window.closeModal = closeModal;
+</script>
+</body>
+</html>
