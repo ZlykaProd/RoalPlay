@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROYAL PLAY — игры и премиум-маркет</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="logo">ROYAL<span>PLAY</span></div>
+  <nav>
+    <a href="#games">Игры</a><a href="#shop">Магазин</a><a href="#vip">VIP</a>
+  </nav>
+  <div class="balance">Баланс: <b id="balance">10 000</b> RP</div>
+  <button class="profile">👤 Профиль</button>
+</header>
+
+<main>
+<section class="hero">
+  <div>
+    <div class="eyebrow">ROYAL PLAY • DEMO</div>
+    <h1>Играйте. Покупайте.<br><span>Живите роскошно.</span></h1>
+    <p>Демо-платформа с азартными мини-играми на виртуальные очки и маркетплейсом премиальных товаров.</p>
+    <div class="hero-actions"><a class="btn primary" href="#games">Играть сейчас</a><a class="btn ghost" href="#shop">Открыть магазин</a></div>
+  </div>
+  <div class="hero-card">
+    <div class="chip">♛</div><div class="hero-number">10 000</div><div class="muted">виртуальных RP</div>
+    <div class="stats"><span>🔥 Серия <b>7</b></span><span>💎 VIP <b>Gold</b></span></div>
+  </div>
+</section>
+
+<section id="games" class="section">
+  <div class="section-head"><div><div class="eyebrow">ARCADE</div><h2>Игры</h2></div><span class="pill">Только виртуальные RP</span></div>
+  <div class="games-grid">
+    <article class="game" data-game="roulette"><div class="game-art roulette-art">🎡</div><h3>Royal Roulette</h3><p>Ставка 100 RP</p><button class="play">Играть</button></article>
+    <article class="game" data-game="blackjack"><div class="game-art cards-art">🂡</div><h3>Blackjack</h3><p>Ставка 250 RP</p><button class="play">Играть</button></article>
+    <article class="game" data-game="slots"><div class="game-art slots-art">🎰</div><h3>Neon Slots</h3><p>Ставка 100 RP</p><button class="play">Играть</button></article>
+    <article class="game" data-game="dice"><div class="game-art dice-art">🎲</div><h3>High Dice</h3><p>Ставка 150 RP</p><button class="play">Играть</button></article>
+  </div>
+</section>
+
+<section id="shop" class="section shop">
+  <div class="section-head"><div><div class="eyebrow">ROYAL MARKET</div><h2>Премиум-магазин</h2></div><div class="filters"><button class="filter active" data-filter="all">Все</button><button class="filter" data-filter="home">Недвижимость</button><button class="filter" data-filter="yacht">Яхты</button><button class="filter" data-filter="car">Авто</button></div></div>
+  <div class="products">
+    <article class="product" data-cat="home"><div class="product-img house">🏝️</div><div class="product-body"><small>НЕДВИЖИМОСТЬ</small><h3>Villa Azure</h3><p>Средиземноморская вилла · 6 спален</p><strong>€ 4 850 000</strong><button>Подробнее</button></div></article>
+    <article class="product" data-cat="yacht"><div class="product-img yacht">🛥️</div><div class="product-body"><small>ЯХТЫ</small><h3>Ocean Crown 72</h3><p>22 м · 4 каюты · 12 гостей</p><strong>€ 7 200 000</strong><button>Подробнее</button></div></article>
+    <article class="product" data-cat="car"><div class="product-img car">🏎️</div><div class="product-body"><small>АВТО</small><h3>V12 Grand Tourer</h3><p>Спортивное купе · 799 л.с.</p><strong>€ 385 000</strong><button>Подробнее</button></div></article>
+    <article class="product" data-cat="home"><div class="product-img pent">🏙️</div><div class="product-body"><small>НЕДВИЖИМОСТЬ</small><h3>Skyline Penthouse</h3><p>Пентхаус · 310 м² · панорама города</p><strong>€ 2 950 000</strong><button>Подробнее</button></div></article>
+  </div>
+</section>
+
+<section id="vip" class="vip">
+  <div><div class="eyebrow">ROYAL CLUB</div><h2>VIP-программа</h2><p>Бонусные RP, уникальные витрины и персональные предложения в демо-режиме.</p></div>
+  <div class="vip-level"><span>GOLD</span><b>7 500</b><small>RP до Platinum</small></div>
+</section>
+</main>
+
+<footer><span>ROYALPLAY © 2026</span><span>18+ • Демо-сайт • Игра ведётся только на виртуальные RP</span></footer>
+
+<div class="modal" id="modal"><div class="modal-box"><button class="close">×</button><div id="modalContent"></div></div></div>
+<script src="script.js"></script>
+</body>
+</html>
